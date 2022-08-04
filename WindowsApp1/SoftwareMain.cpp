@@ -115,7 +115,9 @@ void MainWndAddWidgets(HWND hWnd)
 {
 	CreateWindowA("button", "Clear", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, 10, windowX / 10, windowY / 10, hWnd, NULL, NULL, NULL);
 
-	CreateWindowA("static", "Status: Error", WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE | WS_BORDER, 20 + windowX / 10, 10, windowX - 30 - (windowX / 10), windowY / 10, hWnd, NULL, NULL, NULL);
+	CreateWindowA("button", "Draw", WS_VISIBLE | WS_CHILD | ES_CENTER, 20 + windowX / 10, 10, windowX / 10, windowY / 10, hWnd, NULL, NULL, NULL);
+
+	CreateWindowA("static", "Status: Error", WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE | WS_BORDER, 30 + ((windowX / 10) * 2), 10, windowX - 40 - ((windowX / 10) * 2), windowY / 10, hWnd, NULL, NULL, NULL);
 
 	CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | WS_BORDER, 10, 20 + (windowY / 10), windowX - 20, windowY - 40 - (windowY / 10) * 2, hWnd, NULL, NULL, NULL);
 

@@ -3,15 +3,14 @@
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
 {
-	WNDCLASS SoftwareMainClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst, LoadIcon(NULL, IDI_WINLOGO), L"MainWndClass", SoftwareMainProcedure);
+	GetDesktopResolution();
 
-	long desktopHorizontal, desktopVertical;
-	GetDesktopResolution(desktopHorizontal, desktopVertical);
+	WNDCLASS SoftwareMainClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst, LoadIcon(NULL, IDI_WINLOGO), L"MainWndClass", SoftwareMainProcedure);
 
 	if (!RegisterClassW(&SoftwareMainClass)) { return -1; }
 	MSG SoftwareMainMessage = { 0 };
 
-	CreateWindow(L"MainWndClass", L"First window", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, desktopHorizontal / 4, desktopVertical / 4, NULL, NULL, NULL, NULL);
+	CreateWindow(L"MainWndClass", L"First window", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, desktopX / 3, desktopY / 3, NULL, NULL, NULL, NULL);
 
 	while (GetMessage(&SoftwareMainMessage, NULL, NULL, NULL))
 	{
@@ -21,13 +20,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 	return 0;
 }
 
-void GetDesktopResolution(long& horizontal, long& vertical)
+void GetDesktopResolution()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
-	horizontal = desktop.right;
-	vertical = desktop.bottom;
+	::desktopX = desktop.right;
+	::desktopY = desktop.bottom;
+}
+
+BOOL CALLBACK DestoryChildCallback(HWND hwnd, LPARAM lp)
+{
+	if (hwnd != NULL)
+		DestroyWindow(hwnd);
+
+	return TRUE;
 }
 
 WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hInst, HICON Icon, LPCWSTR Name, WNDPROC Procedure)
@@ -48,6 +55,13 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 {
 	switch (msg)
 	{
+	case WM_SIZE:
+		windowX = LOWORD(lp);
+		windowY = HIWORD(lp);
+		EnumChildWindows(hWnd, DestoryChildCallback, NULL);
+		MainWndAddMenus(hWnd);
+		MainWndAddWidgets(hWnd);
+		break;
 	case WM_COMMAND:
 		switch (wp)
 		{
@@ -100,15 +114,15 @@ void MainWndAddMenus(HWND hWnd)
 
 void MainWndAddWidgets(HWND hWnd)
 {
-	CreateWindowA("button", "Clear", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, 10, 140, 60, hWnd, NULL, NULL, NULL);
+	CreateWindowA("button", "Clear", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, 10, windowX / 10, windowY / 10, hWnd, NULL, NULL, NULL);
 
-	CreateWindowA("static", "Status: Error", WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE | WS_BORDER, 160, 10, 830, 60, hWnd, NULL, NULL, NULL);
+	CreateWindowA("static", "Status: Error", WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE | WS_BORDER, 20 + windowX / 10, 10, windowX - 30 - (windowX / 10), windowY / 10, hWnd, NULL, NULL, NULL);
 
-	CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | WS_BORDER, 10, 80, 980, 340, hWnd, NULL, NULL, NULL);
+	CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | WS_BORDER, 10, 20 + (windowY / 10), windowX - 20, windowY - 40 - (windowY / 10) * 2, hWnd, NULL, NULL, NULL);
 
-	CreateWindowA("button", "Save", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, 430, 140, 60, hWnd, NULL, NULL, NULL);
+	CreateWindowA("button", "Save", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, windowY - 10 - (windowY / 10), windowX / 10, windowY / 10, hWnd, NULL, NULL, NULL);
 
-	CreateWindowA("button", "Load", WS_VISIBLE | WS_CHILD | ES_CENTER, 160, 430, 140, 60, hWnd, NULL, NULL, NULL);
+	CreateWindowA("button", "Load", WS_VISIBLE | WS_CHILD | ES_CENTER, 20 + (windowX / 10), windowY - 10 - (windowY / 10), windowX / 10, windowY / 10, hWnd, NULL, NULL, NULL);
 
-	CreateWindowA("static", "Copyright © 2022", WS_VISIBLE | ES_RIGHT | WS_CHILD | SS_CENTERIMAGE, 310, 430, 680, 60, hWnd, NULL, NULL, NULL);
+	CreateWindowA("static", "Copyright © 2022", WS_VISIBLE | ES_RIGHT | WS_CHILD | SS_CENTERIMAGE, 30 + ((windowX / 10) * 2), windowY - 10 - (windowY / 10), windowX - ((windowX / 10) * 2) - 40, windowY / 10, hWnd, NULL, NULL, NULL);
 }

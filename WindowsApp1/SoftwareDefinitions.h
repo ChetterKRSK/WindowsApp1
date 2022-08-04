@@ -6,10 +6,16 @@
 
 #define OnExitSoftware		4
 
+long desktopX, desktopY;
+
+long windowX, windowY;
+
 LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp);
 WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hInst, HICON Icon, LPCWSTR Name, WNDPROC Procedure);
 
-void GetDesktopResolution(long& horizontal, long& vertical);
+void GetDesktopResolution();
+
+void GetWindowResolution(HWND hWnd);
 
 void MainWndAddMenus(HWND hWnd);
 void MainWndAddWidgets(HWND hWnd);

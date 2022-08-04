@@ -65,14 +65,12 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 	case WM_COMMAND:
 		switch (wp)
 		{
-		case OnMenuAction1:
-			MessageBoxA(hWnd, "Действие 1 текст!", "Действие 1", MB_OK); break;
-		case OnMenuAction2:
-			MessageBoxA(hWnd, "Действие 2 текст!", "Действие 2", MB_OK); break;
-		case OnMenuAction3:
-			MessageBoxA(hWnd, "Действие 3 текст!", "Действие 3", MB_OK); break;
+		case OnFileMenuAction1:
+			MessageBoxA(hWnd, "Действие!", "Действие", MB_OK); break;
 		case OnExitSoftware:
 			PostQuitMessage(0); break;
+		case OnHelpMenuAction1:
+			MessageBoxA(hWnd, "Данное приложение было разработано бригадой, состоящей из одного человека, в рамках домашнего обучения средствам WinApi и не имеет никакой полезной нагрузки!\nУдачи!", "О приложении", MB_OK); break;
 		default:
 			break;
 		}
@@ -100,14 +98,15 @@ void MainWndAddMenus(HWND hWnd)
 	{
 		AppendMenu(SubFileMenu, MF_POPUP, (UINT_PTR)SubFileActionMenu, L"Действия");
 		{
-			AppendMenu(SubFileActionMenu, MF_STRING, OnMenuAction1, L"Действие 1");
-			AppendMenu(SubFileActionMenu, MF_STRING, OnMenuAction2, L"Действие 2");
-			AppendMenu(SubFileActionMenu, MF_STRING, OnMenuAction3, L"Действие 3");
+			AppendMenu(SubFileActionMenu, MF_STRING, OnFileMenuAction1, L"Действие");
 		}
 		AppendMenu(SubFileMenu, MF_SEPARATOR, NULL, NULL);
 		AppendMenu(SubFileMenu, MF_STRING, OnExitSoftware, L"Выход");
 	}
 	AppendMenu(RootMenu, MF_POPUP, (UINT_PTR)SubHelpMenu, L"Справка");
+	{
+		AppendMenu(SubHelpMenu, MF_STRING, OnHelpMenuAction1, L"О приложении");
+	}
 
 	SetMenu(hWnd, RootMenu);
 }

@@ -1,10 +1,10 @@
 #pragma once
 
-#define OnMenuAction1		1
-#define OnMenuAction2		2
-#define OnMenuAction3		3
+#define OnFileMenuAction1	1
 
-#define OnExitSoftware		4
+#define OnExitSoftware		2
+
+#define OnHelpMenuAction1	3
 
 long desktopX, desktopY;
 
